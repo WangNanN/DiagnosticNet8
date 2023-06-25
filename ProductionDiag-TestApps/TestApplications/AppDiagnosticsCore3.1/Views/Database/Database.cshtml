@@ -1,0 +1,22 @@
+﻿@model IEnumerable<AppCommon.EntityFramework.Employee>
+@{
+    ViewData["Title"] = "Database";
+}
+
+<div class="text-center">
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var e in Model)
+            {
+                <tr><td align="left">@e.Id</td><td align="left">@e.FirstName @e.LastName</td></tr>
+            }
+        </tbody>
+    </table>
+
+</div>

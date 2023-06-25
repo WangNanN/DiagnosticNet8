@@ -1,0 +1,23 @@
+parameters:
+  artifacts: ['']
+  platforms: ['AnyCPU','x64', 'x86']
+
+steps:
+  - ${{ each artifact in parameters.artifacts }}:
+    - ${{ each platform in parameters.platforms }}:
+      - task: ArchiveFiles@2
+        displayName: Create ${{artifact}}-${{platform}}.zip
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/PublishRoot/${{platform}}/${{artifact}}'
+          includeRootFolder: false
+          archiveFile: '$(Build.ArtifactStagingDirectory)/ZipRoot/${{platform}}/${{artifact}}/${{artifact}}-${{platform}}.zip'
+      - task: PublishPipelineArtifact@1
+        displayName: Publish ${{artifact}}-${{platform}}.zip
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/ZipRoot/${{platform}}/${{artifact}}/${{artifact}}-${{platform}}.zip'
+          artifact: '${{artifact}}-${{platform}}'
+      - template: package.yaml
+        parameters:
+          artifactName: '${{artifact}}-${{platform}}'
+          basePath: '$(Build.ArtifactStagingDirectory)/ZipRoot/${{platform}}/${{artifact}}'
+          

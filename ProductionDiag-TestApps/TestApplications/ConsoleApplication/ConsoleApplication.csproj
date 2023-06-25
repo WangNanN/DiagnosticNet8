@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Dockerfile">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppSharedCore\AppSharedCore.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+﻿@model AppSharedDesktop.AppDomain.AppDomainModel
+@{
+    ViewBag.Title = "AppDomain";
+}
+
+<h1>@Model.Name</h1>
+
+<ul>
+    @foreach (var assembly in Model.AssemblyNames)
+    {
+        <li>@assembly</li>
+    }
+</ul>

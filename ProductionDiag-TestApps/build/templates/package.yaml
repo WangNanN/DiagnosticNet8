@@ -1,0 +1,11 @@
+parameters:
+  basePath: ''
+  artifactName: ''
+
+steps:
+  - task: UniversalPackages@0
+    inputs:
+      command: publish
+      publishDirectory: ${{parameters.basePath}}
+      vstsFeedPublish: 'ProductionDiag-TestApps'     
+      vstsFeedPackagePublish: '${{ lower(parameters.artifactName) }}'

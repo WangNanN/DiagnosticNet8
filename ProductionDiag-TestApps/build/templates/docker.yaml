@@ -1,0 +1,42 @@
+parameters:
+  artifact: ''
+  appName: ''
+  platforms: ['AnyCPU']
+  baseVersion: ''
+  thisVersion: ''
+  targets: []
+
+steps:
+  - ${{ each target in parameters.targets}}:
+    - ${{ each platform in parameters.platforms }}:
+      - bash: |
+          echo "##vso[task.setvariable variable=RegistryName;]vsproddiagint.azurecr.io"
+          echo "##vso[task.setvariable variable=RepositoryName;]testapps/ci/${{parameters.appName}}"
+          echo "##vso[task.setvariable variable=BaseTag;]${{parameters.baseVersion}}-${{target.os}}"
+          echo "##vso[task.setvariable variable=TagName;]$(Build.BuildNumber)-${{parameters.thisVersion}}-${{target.os}}"
+          echo "##vso[task.setvariable variable=LatestTagName;]latest-${{parameters.thisVersion}}-${{target.os}}"
+      - task: Docker@2
+        displayName: Docker Build ${{parameters.appName}} ${{platform}} ${{parameters.thisVersion}}-${{target.os}}
+        inputs:
+          containerRegistry: 'VSDiagnosticsDevTestApps'
+          repository: '$(RepositoryName)'
+          command: 'build'
+          Dockerfile: '$(Build.ArtifactStagingDirectory)/${{parameters.artifact}}-${{platform}}/Dockerfile'
+          buildContext: '$(Build.ArtifactStagingDirectory)/${{parameters.artifact}}-${{platform}}'
+          tags: |
+            $(TagName)
+            $(LatestTagName)
+          arguments: '--pull --force-rm=true --build-arg BaseTag=$(BaseTag) --build-arg CLib=${{target.clib}}'
+      - task: Docker@2
+        displayName: Docker Push ${{parameters.appName}} ${{platform}} ${{parameters.thisVersion}}-${{target.os}}
+        inputs:
+          containerRegistry: 'VSDiagnosticsDevTestApps'
+          repository: '$(RepositoryName)'
+          command: 'push'
+          tags: |
+            $(TagName)
+            $(LatestTagName)
+      - bash: |
+          docker rmi $(RegistryName)/$(RepositoryName):$(TagName) 2>/dev/null || true
+        displayName: 'Remove Image'
+        condition: always()

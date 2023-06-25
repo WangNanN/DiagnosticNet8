@@ -1,0 +1,50 @@
+﻿@model AppSharedCore.FileSystem.FileSystemEntryModel
+
+@{
+    ViewData["Title"] = "FileSystem";
+}
+
+<h1>FileSystem</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th colspan="2">
+                @Model.Name
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @if (Model.IsRoot)
+                {
+                    @Model.DisplayName
+                }
+                else
+                {
+                    @Html.ActionLink("..", "Dir", "FileSystem", new { directory = Model.Parent }, null)
+                }
+            </th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Children)
+        {
+            <tr>
+                <td>
+                    @if (item.Type == AppSharedCore.FileSystem.FileEntryType.Directory)
+                    {
+                        @Html.ActionLink(item.DisplayName, "Dir", "FileSystem", new { directory = item.Name }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.DisplayName, "File", "FileSystem", new { file = item.Name }, null)
+                    }
+                </td>
+                <td>
+                    @item.Type
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

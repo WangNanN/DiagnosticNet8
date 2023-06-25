@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="App.pubproj.settings" />
+
+  <ItemGroup Condition="'$(Platform)' == 'AnyCPU' And '$(AspNetCoreHostingModel)'==''">
+    <ProjectReference Include="AppDesktop\AppDesktop.csproj">
+      <AdditionalProperties>DeployOnBuild=True;DeployDefaultTarget=WebPublish;WebPublishMethod=FileSystem;DeleteExistingFiles=True;PublishUrl=$(PublishDirectory)\AppDesktop</AdditionalProperties>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Import Project="App.pubproj.targets" />
+</Project>

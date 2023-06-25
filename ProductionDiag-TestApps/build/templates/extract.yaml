@@ -1,0 +1,18 @@
+parameters:
+  artifact: ''
+  platforms: ['AnyCPU']
+
+steps:
+  - ${{ each platform in parameters.platforms }}:
+    - task: DownloadPipelineArtifact@2
+      displayName: Download Artifact ${{parameters.artifact}}-${{platform}}
+      inputs:
+        artifact: ${{parameters.artifact}}-${{platform}}
+        path: $(Build.ArtifactStagingDirectory)/
+    - task: Bash@3
+      displayName: Unzip ${{parameters.artifact}}-${{platform}}.zip
+      inputs:
+        targetType: 'inline'
+        script: |
+          unzip $(Build.ArtifactStagingDirectory)/${{parameters.artifact}}-${{platform}}.zip -d $(Build.ArtifactStagingDirectory)/${{parameters.artifact}}-${{platform}}
+        workingDirectory: '$(Build.ArtifactStagingDirectory)'

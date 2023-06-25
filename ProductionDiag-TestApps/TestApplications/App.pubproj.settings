@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Platform Condition=" '$(Platform)'=='' ">AnyCPU</Platform>
+    <Configuration Condition=" '$(Configuration)'=='' ">Release</Configuration>
+    <PublishDirectory Condition=" $(BUILD_ARTIFACTSTAGINGDIRECTORY) != ''">$(BUILD_ARTIFACTSTAGINGDIRECTORY)</PublishDirectory>
+    <PublishDirectory Condition=" $(BUILD_ARTIFACTSTAGINGDIRECTORY) == ''">$(MSBuildThisFileDirectory)</PublishDirectory>
+    <PublishDirectory>$(PublishDirectory)\PublishRoot\$(Platform)</PublishDirectory>
+    <CoreHostingMoniker Condition=" '$(AspNetCoreHostingModel)'!='' ">-$(AspNetCoreHostingModel)</CoreHostingMoniker>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,23 @@
+parameters:
+  platforms: ['AnyCPU','x64', 'x86']
+  msbuildArguments: ''
+  tag: ''
+
+steps:
+  - ${{ each platform in parameters.platforms }}:
+    # Build .NET Core projects with dotnet since MSBuild on the build agents does not yet understand
+    # the .NET 5 SDK (which results with restoration and build issues for .NET 5 projects).
+    - task: DotNetCoreCLI@2
+      displayName: Build App.Core.pubproj - ${{ platform }} Release ${{ parameters.tag }}
+      inputs:
+        projects: 'TestApplications\App.Core.pubproj'
+        arguments: '--configuration Release --no-restore /p:Platform=${{ platform }} ${{ parameters.msbuildArguments }}'
+
+    # Only use MSBuild on the .NET Framework projects
+    - task: MSBuild@1
+      displayName: Build App.Desktop.pubproj - ${{ platform }} Release ${{ parameters.tag }}
+      inputs:
+        solution: 'TestApplications\App.Desktop.pubproj'
+        platform: ${{ platform }}
+        configuration: 'Release'
+        msbuildArguments: ${{ parameters.msbuildArguments }}

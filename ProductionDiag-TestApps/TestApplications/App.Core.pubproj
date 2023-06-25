@@ -1,0 +1,35 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="App.pubproj.settings" />
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='AnyCPU'">
+    <ProjectReference>
+      <AdditionalProperties>PublishProtocol=FileSystem</AdditionalProperties>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ProjectReference>
+      <AdditionalProperties>PublishProtocol=FileSystem;SelfContained=true;RuntimeIdentifier=win-x64</AdditionalProperties>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x86'">
+    <ProjectReference>
+      <AdditionalProperties>PublishProtocol=FileSystem;SelfContained=true;RuntimeIdentifier=win-x86</AdditionalProperties>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="AppDiagnosticsCore3.1\AppDiagnosticsCore3.1.csproj">
+      <AdditionalProperties>%(AdditionalProperties);PublishDir=$(PublishDirectory)\%(Filename)$(CoreHostingMoniker)</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="AppDiagnosticsNet\AppDiagnosticsNet.csproj">
+      <AdditionalProperties>%(AdditionalProperties);PublishDir=$(PublishDirectory)\%(Filename)6$(CoreHostingMoniker);TargetFramework=net6.0</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="AppDiagnosticsNet\AppDiagnosticsNet.csproj">
+      <AdditionalProperties>%(AdditionalProperties);PublishDir=$(PublishDirectory)\%(Filename)7$(CoreHostingMoniker);TargetFramework=net7.0</AdditionalProperties>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Import Project="App.pubproj.targets" />
+</Project>

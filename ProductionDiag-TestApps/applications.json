@@ -1,0 +1,148 @@
+{
+  "applications": [{
+    "name": "AppDesktop",
+    "clrType": "desktop",
+    "artifacts": [{
+        "name": "anycpu",
+        "artifactName": "AppDesktop-AnyCPU",
+        "zipFileName": "AppDesktop-AnyCPU.zip",
+        "platform": "anycpu",
+        "processHostingModel": "none"
+    }]
+  },{
+    "name": "AppDiagnosticsCore3.1",
+    "clrType": "core",
+    "artifacts": [{
+      "name": "anycpu-inproc",
+      "artifactName": "AppDiagnosticsCore3.1-AnyCPU",
+      "zipFileName": "AppDiagnosticsCore3.1-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x64-inproc",
+      "artifactName": "AppDiagnosticsCore3.1-x64",
+      "zipFileName": "AppDiagnosticsCore3.1-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x86-inproc",
+      "artifactName": "AppDiagnosticsCore3.1-x86",
+      "zipFileName": "AppDiagnosticsCore3.1-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "anycpu-outofproc",
+      "artifactName": "AppDiagnosticsCore3.1-outofprocess-AnyCPU",
+      "zipFileName": "AppDiagnosticsCore3.1-outofprocess-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x64-outofproc",
+      "artifactName": "AppDiagnosticsCore3.1-outofprocess-x64",
+      "zipFileName": "AppDiagnosticsCore3.1-outofprocess-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x86-outofproc",
+      "artifactName": "AppDiagnosticsCore3.1-outofprocess-x86",
+      "zipFileName": "AppDiagnosticsCore3.1-outofprocess-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "outofproc"
+    }]
+  },{
+    "name": "AppDiagnosticsNet6",
+    "clrType": "core",
+    "artifacts": [{
+      "name": "anycpu-inproc",
+      "artifactName": "AppDiagnosticsNet6-AnyCPU",
+      "zipFileName": "AppDiagnosticsNet6-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x64-inproc",
+      "artifactName": "AppDiagnosticsNet6-x64",
+      "zipFileName": "AppDiagnosticsNet6-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x86-inproc",
+      "artifactName": "AppDiagnosticsNet6-x86",
+      "zipFileName": "AppDiagnosticsNet6-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "anycpu-outofproc",
+      "artifactName": "AppDiagnosticsNet6-outofprocess-AnyCPU",
+      "zipFileName": "AppDiagnosticsNet6-outofprocess-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x64-outofproc",
+      "artifactName": "AppDiagnosticsNet6-outofprocess-x64",
+      "zipFileName": "AppDiagnosticsNet6-outofprocess-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x86-outofproc",
+      "artifactName": "AppDiagnosticsNet6-outofprocess-x86",
+      "zipFileName": "AppDiagnosticsNet6-outofprocess-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "outofproc"
+    }]
+  },{
+    "name": "AppDiagnosticsNet7",
+    "clrType": "core",
+    "artifacts": [{
+      "name": "anycpu-inproc",
+      "artifactName": "AppDiagnosticsNet7-AnyCPU",
+      "zipFileName": "AppDiagnosticsNet7-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x64-inproc",
+      "artifactName": "AppDiagnosticsNet7-x64",
+      "zipFileName": "AppDiagnosticsNet7-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "x86-inproc",
+      "artifactName": "AppDiagnosticsNet7-x86",
+      "zipFileName": "AppDiagnosticsNet7-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "inproc"
+    },
+    {
+      "name": "anycpu-outofproc",
+      "artifactName": "AppDiagnosticsNet7-outofprocess-AnyCPU",
+      "zipFileName": "AppDiagnosticsNet7-outofprocess-AnyCPU.zip",
+      "platform": "anycpu",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x64-outofproc",
+      "artifactName": "AppDiagnosticsNet7-outofprocess-x64",
+      "zipFileName": "AppDiagnosticsNet7-outofprocess-x64.zip",
+      "platform": "x64",
+      "processHostingModel": "outofproc"
+    },
+    {
+      "name": "x86-outofproc",
+      "artifactName": "AppDiagnosticsNet7-outofprocess-x86",
+      "zipFileName": "AppDiagnosticsNet7-outofprocess-x86.zip",
+      "platform": "x86",
+      "processHostingModel": "outofproc"
+    }]
+  }]
+}

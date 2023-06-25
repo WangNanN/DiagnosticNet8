@@ -1,0 +1,188 @@
+# ASP.NET Core
+
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+name: $(Date:yyyyMMdd)$(Rev:rr)
+
+# There are some daily triggers that remove older published assets,
+# such as docker images that are older than one week. Use this trigger
+# to make sure there is at least one of these assets avaiable for testing.
+# Additionally, .NET docker base images are updated on "Patch Tuesday" in the morning.
+# Automatically run every Tuesday 11pm UTC (Tuesday 4pm PST)
+schedules:
+- cron: "0 23 * * 2"
+  displayName: Weekly CI Refresh
+  branches:
+    include:
+    - main
+  always: true # Always run pipeline, even if there haven't been code changes
+
+jobs:
+- job:  BuildArtifacts
+  displayName: Build Artifacts
+
+  pool:
+    name: 'VSEngSS-MicroBuild2022-1ES'
+
+  variables:
+    buildConfiguration: 'Release'
+    buildPlatform: 'Any CPU'
+
+  steps:  
+  - task: UseDotNet@2
+    displayName: Install .NET Core 3.1 Runtime
+    inputs:
+      packageType: 'runtime'
+      version: '3.1.x'
+
+  - task: UseDotNet@2
+    displayName: Install .NET 6 Runtime
+    inputs:
+      packageType: 'runtime'
+      version: '6.0.x'
+
+  - task: UseDotNet@2
+    displayName: Install .NET 7 SDK
+    inputs:
+      packageType: 'sdk'
+      version: '7.0.x'
+
+  - task: NuGetToolInstaller@0
+    displayName: Install NuGet.exe
+    inputs:
+      versionSpec: '5.6.0'
+
+  # Only restore the .NET Framework projects using NuGet.exe since the .NET Core projects
+  # will be built with "dotnet build". This avoids incompatible three-part shared framework
+  # versioning issues when building as well as the MSBuild on the build agents not understanding
+  # the .NET 5 SDK yet. The .NET Framework projects must be in a separate solution so that
+  # NuGet restores all package dependencies correctly.
+  - task: NuGetCommand@2
+    displayName: NuGet restore solutions
+    inputs:
+      command: 'restore'
+      restoreSolution: 'TestApplications\TestApplications.DesktopOnly.sln'
+      nugetConfigPath: 'TestApplications\NuGet.config'
+      includeNuGetOrg: true
+      noCache: true
+  
+  # Can use "dotnet restore" on all projects since this will skip restoring .NET Framework projects.
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore solutions
+    inputs:
+      command: 'restore'
+      projects: 'TestApplications\TestApplications.sln'
+      nugetConfigPath: 'TestApplications\NuGet.config'
+      includeNuGetOrg: true
+      noCache: true
+
+  - template: templates/build.yaml
+    parameters:
+      tag: 'default'
+
+  - template: templates/build.yaml
+    parameters:
+      msbuildArguments: '/p:AspNetCoreHostingModel=outofprocess'
+      tag: 'outofproc'
+
+  - template: templates/publish.yaml
+    parameters:
+      artifacts: ['AppDesktop']
+      platforms: ['AnyCPU']
+
+  # .NET Core 3.1 is EOL however keep it for a while longer to make sure regressions do not occur
+  - template: templates/publish.yaml
+    parameters:
+      artifacts: ['AppDiagnosticsCore3.1', 'AppDiagnosticsCore3.1-outofprocess']
+
+  - template: templates/publish.yaml
+    parameters:
+      artifacts: ['AppDiagnosticsNet6', 'AppDiagnosticsNet6-outofprocess']
+  
+  - template: templates/publish.yaml
+    parameters:
+      artifacts: ['AppDiagnosticsNet7', 'AppDiagnosticsNet7-outofprocess']
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish applications.json
+    inputs:
+      targetPath: 'applications.json'
+      artifact: 'Applications'
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: $(Build.SourcesDirectory)
+      TargetFolder: $(Build.ArtifactStagingDirectory)/PublishRoot/applicationsManifest
+      Contents: applications.json
+  - template: templates/package.yaml
+    parameters:
+      basePath: '$(Build.ArtifactStagingDirectory)/PublishRoot/applicationsManifest'
+      artifactName: 'Applications'
+
+- job: PublishContainers
+  displayName: Publish Containers
+  dependsOn: BuildArtifacts
+  pool:
+    name: AzurePipelines-EO
+    demands: ImageOverride -equals AzurePipelinesUbuntu20.04compliant
+
+  steps:
+  # .NET Core 3.1 is EOL however keep it for a while longer to make sure regressions do not occur
+  - template: templates/extract.yaml
+    parameters:
+      artifact: 'AppDiagnosticsCore3.1'
+
+  - template: templates/extract.yaml
+    parameters:
+      artifact: 'AppDiagnosticsNet6'
+
+  - template: templates/extract.yaml
+    parameters:
+      artifact: 'AppDiagnosticsNet7'
+
+  - template: templates/docker.yaml
+    parameters:
+      appName: 'appcore3.1'
+      artifact: 'AppDiagnosticsCore3.1'
+      baseVersion: 3.1
+      thisVersion: 3.1
+      targets:
+      - os: bullseye-slim
+        clib: gnu
+      - os: focal
+        clib: gnu
+      - os: alpine3.16
+        clib: musl
+
+  - template: templates/docker.yaml
+    parameters:
+      appName: 'appnet6'
+      artifact: 'AppDiagnosticsNet6'
+      baseVersion: 6.0
+      thisVersion: 6.0
+      targets:
+      - os: bullseye-slim
+        clib: gnu
+      - os: jammy
+        clib: gnu
+      - os: alpine3.17
+        clib: musl
+  
+  - template: templates/docker.yaml
+    parameters:
+      appName: 'appnet7'
+      artifact: 'AppDiagnosticsNet7'
+      baseVersion: 7.0
+      thisVersion: 7.0
+      targets:
+      - os: bullseye-slim
+        clib: gnu
+      - os: jammy
+        clib: gnu
+      - os: alpine3.17
+        clib: musl

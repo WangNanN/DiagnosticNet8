@@ -1,0 +1,62 @@
+﻿@model TTDTest_AspNetCore.Models.IndexViewModel
+@using TTDTest_AspNetCore.Models
+@using System
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about @ViewData.Model.CheesecakeCount Cheesecakes!</p>
+        <p>Page generated at @ViewData.Model.GeneratedTime.ToString("yyyy-MM-dd HH:mm:ss.fff")</p>
+
+        <table class="table">
+            <tr>
+                <th>
+                    Cheesecake
+                </th>
+
+                <th>
+                    Contains Emoji
+                </th>
+
+                <th>
+                    Trademark/Copyright
+                </th>
+
+                <th>
+                    Luck Numbers (@ViewData.Model.BitsSelected bits via @ViewData.Model.MathFunction)
+                </th>
+            </tr>
+
+            @foreach (Cheesecake cake in ViewData.Model.Cheesecakes)
+            {
+                <!-- @cake.Name -->
+                <tr>
+                    <td>
+                        @cake.Name
+                    </td>
+
+                    <td>
+                        @(cake.IsCitrus ? "🍊" : string.Empty)
+                        @(cake.IsFruit ? "🍓" : string.Empty)
+                        @(cake.IsCake ? "🍰" : string.Empty)
+                        @(cake.IsChocolate ? "🍫" : string.Empty)
+                        @(cake.IsCheesecake ? "🧀🍰" : string.Empty)
+                    </td>
+
+                    <td>
+                        @cake.RegisteredCopyright
+                        @cake.RegisteredTrademark
+                    </td>
+
+                    <td>
+                        @String.Join(", ", cake.MagicNumbers)
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>

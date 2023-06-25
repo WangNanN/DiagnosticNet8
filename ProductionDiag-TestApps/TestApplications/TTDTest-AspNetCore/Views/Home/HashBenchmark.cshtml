@@ -1,0 +1,69 @@
+﻿@model TTDTest_AspNetCore.Models.HashBenchmarkViewModel
+@using TTDTest_AspNetCore.Models
+@using System
+
+@{
+    ViewData["Title"] = "Hash Benchmark";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Hash Results</h1>
+        <p>Performed tests on @ViewData.Model.Results.Count hashes!</p>
+        <p>Page generated at @ViewData.Model.GeneratedTime.ToString("yyyy-MM-dd HH:mm:ss.fff")</p>
+
+        <table class="table">
+            <tr>
+                <th>
+                Hash Algorithm
+                </th>
+
+                @foreach (int byteCt in ViewData.Model.ByteCounts)
+                {
+                    <th>
+                    @if (byteCt < 1024)
+                    {
+                        @byteCt
+                        <span> B</span>
+                    }
+                    else if (byteCt < 1024 * 1024)
+                    {
+                        @(byteCt / 1024.0)
+                        <span> KB</span>
+                    }
+                    else if (byteCt < 1024 * 1024 * 1024)
+                    {
+                        @(byteCt / 1024.0 / 1024.0)
+                        <span> MB</span>
+                    }
+                    else
+                    {
+                        @(byteCt / 1024.0 / 1024.0)
+                        <span> GB</span>
+                    }
+                    </th>
+                }
+            </tr>
+
+            @foreach (KeyValuePair<string, Dictionary<int, HashBenchmarkResult>> hashResultSet in ViewData.Model.Results)
+            {
+                <!-- @hashResultSet.Key -->
+                <tr>
+                    <td>
+                        @hashResultSet.Key
+                    </td>
+                    
+                    @foreach (KeyValuePair<int, HashBenchmarkResult> hashResult in hashResultSet.Value)
+                    {
+                        <td>
+                            @hashResult.Value.Ticks
+                            ticks / <br/>
+                            @hashResult.Value.Milliseconds
+                            ms
+                        </td>
+                    }
+                </tr>
+            }
+
+        </table>
+
+    </div>
