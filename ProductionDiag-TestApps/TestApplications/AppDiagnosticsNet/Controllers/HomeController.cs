@@ -20,6 +20,7 @@ namespace AppDiagnosticsNet.Controllers
 
         public IActionResult Index()
         {
+            int a=2;
             return View();
         }
 
